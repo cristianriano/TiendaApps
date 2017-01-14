@@ -1,5 +1,8 @@
 package Models;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -9,37 +12,80 @@ import java.util.Date;
  * Created by cristianr on 13/01/2017.
  */
 
-public class Application {
-    private int id;
-    private String name, urlImage, summary, currency;
-    private float price;
+public class Application extends Entity {
+
+    public static final String NAME_OBJECT_KEY = "im:name";
+    public static final String IMAGE_OBJECT_KEY = "im:image";
+    public static final String SUMMARY_OBJECT_KEY = "summary";
+    public static final String PRICE_OBJECT_KEY = "im:price";
+    public static final String RELASE_DATE_OBJECT_KEY = "im:releaseDate";
+    public static final String CURRENCY_KEY = "currency";
+    public static final String AMOUNT_KEY = "amount";
+    public static final String LINK_OBJECT_KEY = "link";
+    public static final String ID_OBJECT_KEY = "id";
+
+    private String summary, currency;
+    private double price;
+    private URL imageUrl;
     private Date relaseDate;
     private final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
-    private URL url;
+    private Category category;
+    private Developer developer;
 
     public Application(){
+        super();
+    }
+
+    public static Application parseFromJSON(JSONObject json) throws JSONException {
+        Application app = new Application();
+        app.setName(json.getJSONObject(NAME_OBJECT_KEY).getString(NAME_KEY));
+        app.setImageUrl(json.getJSONArray(IMAGE_OBJECT_KEY).getJSONObject(1).getString(NAME_KEY));
+        app.setSummary(json.getJSONObject(SUMMARY_OBJECT_KEY).getString(NAME_KEY));
+        JSONObject jsonPrice= json.getJSONObject(PRICE_OBJECT_KEY).getJSONObject(ATTRIBUTES_KEY);
+        app.setCurrency(jsonPrice.getString(CURRENCY_KEY));
+        app.setPrice(jsonPrice.getDouble(AMOUNT_KEY));
+        app.setRelaseDate(json.getJSONObject(RELASE_DATE_OBJECT_KEY).getString(NAME_KEY));
+        app.setUrl(json.getJSONObject(LINK_OBJECT_KEY).getJSONObject(ATTRIBUTES_KEY).getString(URL_KEY));
+        app.setId(json.getJSONObject(ID_OBJECT_KEY).getJSONObject(ATTRIBUTES_KEY).getString(ID_KEY));
+        return app;
+    }
+
+    public URL getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(URL imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setImageUrl(String s){
+        try{
+            this.imageUrl = new URL(s);
+        }
+        catch (MalformedURLException ex){
+            ex.printStackTrace();
+            this.imageUrl = null;
+        }
+    }
+
+    public Developer getDeveloper() {
+        return developer;
+    }
+
+    public void setDeveloper(Developer developer) {
+        this.developer = developer;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public void setRelaseDate(Date relaseDate) {
         this.relaseDate = relaseDate;
-    }
-
-    public void setUrl(URL url) {
-        this.url = url;
-    }
-
-    public void setUrl(String s){
-        try{
-            this.url = new URL(s);
-        }
-        catch (MalformedURLException ex){
-            ex.printStackTrace();
-            this.url = null;
-        }
-    }
-
-    public URL getUrl(){
-        return url;
     }
 
     public void setRelaseDate(String s){
@@ -54,30 +100,6 @@ public class Application {
 
     public Date getRelaseDate(){
         return relaseDate;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUrlImage() {
-        return urlImage;
-    }
-
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
     }
 
     public String getSummary() {
@@ -96,11 +118,11 @@ public class Application {
         this.currency = currency;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 }
