@@ -1,4 +1,4 @@
-package Models;
+package com.example.cristianr.tiendaapps.models;
 
 import java.net.MalformedURLException;
 import java.net.URL;

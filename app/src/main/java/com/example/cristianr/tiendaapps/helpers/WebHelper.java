@@ -1,4 +1,4 @@
-package Helpers;
+package com.example.cristianr.tiendaapps.helpers;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -14,10 +14,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import Models.Application;
-import Models.Category;
-import Models.Developer;
-import cz.msebera.android.httpclient.entity.mime.Header;
+import com.example.cristianr.tiendaapps.models.Application;
+import com.example.cristianr.tiendaapps.models.Category;
+import com.example.cristianr.tiendaapps.models.Developer;
 
 /**
  * Created by cristianr on 13/01/2017.
@@ -28,6 +27,8 @@ public class WebHelper {
     public final static String APPS_URL = "https://itunes.apple.com/us/rss/topfreeapplications/limit=20/json";
     public final static String APPS_JSON_KEY = "entry";
     public final static String MAIN_JSON_KEY = "feed";
+    public final static String CATEGRY_OBJECT_KEY = "category";
+    public final static String DEVELOPER_OBJECT_KEY = "im:artist";
 
     private static AsyncHttpClient client;
 
@@ -63,8 +64,8 @@ public class WebHelper {
                     try{
                         JSONObject json = jsonApps.getJSONObject(i);
                         app = Application.parseFromJSON(json);
-                        app.setCategory(Category.parseFromJSON(json.getJSONObject("category")));
-                        app.setDeveloper(Developer.parseFromJSON(json.getJSONObject("im:artist")));
+                        app.setCategory(Category.parseFromJSON(json.getJSONObject(CATEGRY_OBJECT_KEY)));
+                        app.setDeveloper(Developer.parseFromJSON(json.getJSONObject(DEVELOPER_OBJECT_KEY)));
                         applications.add(app);
                     }
                     catch (JSONException ex){

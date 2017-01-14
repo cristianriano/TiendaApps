@@ -1,10 +1,7 @@
-package Models;
+package com.example.cristianr.tiendaapps.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by cristianr on 13/01/2017.

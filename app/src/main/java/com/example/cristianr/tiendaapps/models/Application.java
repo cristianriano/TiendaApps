@@ -1,4 +1,4 @@
-package Models;
+package com.example.cristianr.tiendaapps.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +28,7 @@ public class Application extends Entity {
     private double price;
     private URL imageUrl;
     private Date relaseDate;
-    private final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+    private final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     private Category category;
     private Developer developer;
 
