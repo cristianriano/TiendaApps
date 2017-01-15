@@ -3,6 +3,7 @@ package com.example.cristianr.tiendaapps.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,14 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         Category category = categories.get(position);
 
         holder.categoryNameTextView.setText(Html.fromHtml(category.getName()));
-        holder.categoryUrlTextView.setText(Html.fromHtml(category.getUrl().toString()));
+        if(category.getUrl() != null){
+            String htmlLink = String.format("<a href='%s'>Link</a>", category.getUrl().toString());
+            holder.categoryUrlTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+            holder.categoryUrlTextView.setText(Html.fromHtml(htmlLink));
+        }
+        else{
+            holder.categoryUrlTextView.setText("");
+        }
     }
 
     // Get size

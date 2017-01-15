@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -67,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setColorSchemeColors(primaryDarkColor);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        android.support.v7.app.ActionBar bar = getSupportActionBar();
+        bar.setTitle("Categories");
+        return true;
+    }
+
     public void updateInfo(){
         if(WebHelper.checkInternet(this)){
             updateApplications();
@@ -108,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
                 // Set an array of categories
                 // First clear already existing
                 categories.clear();
+                Category all = new Category();
+                all.setName("All");
+                categories.add(all);
                 // Add new categories to array
                 ArrayList<String> temp = new ArrayList<>();
                 for(Application a : apps){

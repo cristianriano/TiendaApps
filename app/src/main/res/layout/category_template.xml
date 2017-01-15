@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     cardview:cardCornerRadius="@dimen/card_corner_radius"
     cardview:cardElevation="@dimen/card_elevation"
-    cardview:cardUseCompatPadding="true">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             android:textColor="@color/primary_text"
             android:textSize="@dimen/item_title"
             android:layout_marginBottom="@dimen/item_title_margin_bottom"
-            android:text="Category Name"
+            android:text=""
             />
 
         <TextView
@@ -31,10 +31,15 @@
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
             android:textSize="@dimen/item_url"
-            android:text="Url"
-            android:autoLink="web"
+            android:text=""
+
             />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_width"
+        android:background="@color/divider" />
 
 </android.support.v7.widget.CardView>
