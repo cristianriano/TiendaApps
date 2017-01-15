@@ -60,7 +60,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
 
         holder.categoryNameTextView.setText(Html.fromHtml(category.getName()));
         if(category.getUrl() != null){
-            String htmlLink = String.format("<a href='%s'>Link</a>", category.getUrl().toString());
+            String htmlLink = String.format("<a href='%s'>Link</a>", category.getUrl());
             holder.categoryUrlTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
             holder.categoryUrlTextView.setText(Html.fromHtml(htmlLink));
         }

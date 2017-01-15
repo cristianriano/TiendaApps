@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/card_height"
+    cardview:cardCornerRadius="@dimen/card_corner_radius"
+    cardview:cardElevation="@dimen/card_elevation"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/card_margin_left"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/application_image"
+            android:layout_width="@dimen/card_circle_image_size"
+            android:layout_height="@dimen/card_circle_image_size"
+            android:background="@drawable/circle_grey"
+            android:elevation="@dimen/card_image_elevation"
+            android:layout_marginTop="@dimen/card_image_margin"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/card_image_margin">
+
+            <TextView
+                android:id="@+id/application_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/card_name_size"
+                android:textColor="@color/primary_text"
+                />
+
+            <TextView
+                android:id="@+id/application_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/card_category_size"
+                android:textColor="@color/primary_text"
+                />
+
+            <TextView
+                android:id="@+id/application_developer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/card_summary_size"
+                android:textColor="@color/secondary_text"
+                />
+
+            <TextView
+                android:id="@+id/application_summary"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="12sp"
+                android:textColor="@dimen/card_summary_size"
+                android:layout_marginTop="10dp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

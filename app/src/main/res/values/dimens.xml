@@ -13,4 +13,14 @@
     <dimen name="item_title_margin_bottom">5dp</dimen>
     <dimen name="item_url">10sp</dimen>
 
+    <!-- Application Card -->
+    <dimen name="card_height">120dp</dimen>
+    <dimen name="card_margin_left">6dp</dimen>
+    <dimen name="card_circle_image_size">60dp</dimen>
+    <dimen name="card_image_elevation">5dp</dimen>
+    <dimen name="card_image_margin">10dp</dimen>
+    <dimen name="card_name_size">24sp</dimen>
+    <dimen name="card_category_size">18sp</dimen>
+    <dimen name="card_summary_size">12sp</dimen>
+
 </resources>

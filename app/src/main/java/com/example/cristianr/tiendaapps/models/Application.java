@@ -26,7 +26,7 @@ public class Application extends Entity {
 
     private String summary, currency;
     private double price;
-    private URL imageUrl;
+    private String imageUrl;
     private Date relaseDate;
     private final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     private Category category;
@@ -50,22 +50,12 @@ public class Application extends Entity {
         return app;
     }
 
-    public URL getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(URL imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public void setImageUrl(String s){
-        try{
-            this.imageUrl = new URL(s);
-        }
-        catch (MalformedURLException ex){
-            ex.printStackTrace();
-            this.imageUrl = null;
-        }
     }
 
     public Developer getDeveloper() {
