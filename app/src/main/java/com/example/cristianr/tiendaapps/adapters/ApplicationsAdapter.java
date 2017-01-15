@@ -21,12 +21,14 @@ import java.util.List;
 
 public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapter.AppViewHolder> {
 
-    private List<Application> applications;
+    private final List<Application> applications;
+    private final OnItemClickListener listener;
     private Context context;
 
-    public ApplicationsAdapter(Context context, List<Application> applications){
+    public ApplicationsAdapter(Context context, List<Application> applications, OnItemClickListener listener){
         this.applications = applications;
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -39,6 +41,8 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
     @Override
     public void onBindViewHolder(ApplicationsAdapter.AppViewHolder holder, int position) {
         Application application = applications.get(position);
+
+        // Set listener
 
         // Load Image
         Picasso.with(context).load(application.getImageUrl())
@@ -76,5 +80,9 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
             appDeveloperTextView = (TextView) v.findViewById(R.id.application_developer);
             appSummaryTextView = (TextView) v.findViewById(R.id.application_summary);
         }
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(AppViewHolder holder);
     }
 }

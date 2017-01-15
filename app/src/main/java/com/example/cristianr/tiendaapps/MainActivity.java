@@ -52,7 +52,13 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         // Set adapter
-        adapter = new CategoriesAdapter(this, categories);
+        adapter = new CategoriesAdapter(categories, new CategoriesAdapter.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(Category category) {
+                Toast.makeText(MainActivity.this, category.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         updateInfo();

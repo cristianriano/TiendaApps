@@ -1,9 +1,7 @@
 package com.example.cristianr.tiendaapps.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import com.example.cristianr.tiendaapps.R;
 import com.example.cristianr.tiendaapps.models.Category;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,12 +18,12 @@ import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
 
-    private List<Category> categories;
-    private Context context;
+    private final List<Category> categories;
+    private final OnItemClickListener listener;
 
-    public CategoriesAdapter(Context context, List<Category> categories){
-        this.context = context;
+    public CategoriesAdapter(List<Category> categories, OnItemClickListener listener){
         this.categories = categories;
+        this.listener = listener;
     }
 
     // Provide a reference to the views for each data item
@@ -39,6 +36,25 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             super(v);
             this.categoryNameTextView = (TextView) v.findViewById(R.id.category_name);
             this.categoryUrlTextView = (TextView) v.findViewById(R.id.category_url);
+        }
+
+        public void bind(final Category category, final OnItemClickListener listener) {
+            categoryNameTextView.setText(category.getName());
+            if(category.getUrl() != null){
+                String htmlLink = String.format("<a href='%s'>Link</a>", category.getUrl());
+                categoryUrlTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
+                categoryUrlTextView.setText(Html.fromHtml(htmlLink));
+            }
+            else{
+                categoryUrlTextView.setText("");
+            }
+            itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(category);
+                }
+            });
         }
     }
 
@@ -58,21 +74,18 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         // Get selected position
         Category category = categories.get(position);
 
-        holder.categoryNameTextView.setText(Html.fromHtml(category.getName()));
-        if(category.getUrl() != null){
-            String htmlLink = String.format("<a href='%s'>Link</a>", category.getUrl());
-            holder.categoryUrlTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
-            holder.categoryUrlTextView.setText(Html.fromHtml(htmlLink));
-        }
-        else{
-            holder.categoryUrlTextView.setText("");
-        }
+        // Set listener
+        holder.bind(category, listener);
     }
 
     // Get size
     @Override
     public int getItemCount() {
         return (null != categories ? categories.size() : 0);
+    }
+
+    public interface OnItemClickListener{
+        void onItemClick(Category category);
     }
 
 
