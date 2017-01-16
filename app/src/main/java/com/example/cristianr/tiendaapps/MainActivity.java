@@ -1,20 +1,17 @@
 package com.example.cristianr.tiendaapps;
 
-import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.cristianr.tiendaapps.adapters.CategoriesAdapter;
+import com.example.cristianr.tiendaapps.fragments.CategoriesFragment;
 import com.example.cristianr.tiendaapps.helpers.WebHelper;
 import com.example.cristianr.tiendaapps.models.Application;
 import com.example.cristianr.tiendaapps.models.Category;
@@ -28,53 +25,38 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<Application> apps;
+    private List<Application> applications;
     private List<Category> categories;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private CategoriesAdapter adapter;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager layoutManager;
+    // Fragment
+    private CategoriesFragment categoriesFragment;
 
     private static AsyncHttpClient client;
-
-    public static final String CATEGORY_KEY = "category";
-    public static final String LIST_KEY = "list";
+    public boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // First know the kind of device
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         categories = new ArrayList<>();
-        apps = new ArrayList<Application>();
-
-        recyclerView = (RecyclerView) findViewById(R.id.categories_list);
-        // Improve performance if changes in content don't change layout size
-        recyclerView.setHasFixedSize(true);
-        // Use linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        // Set adapter with listener
-        adapter = new CategoriesAdapter(categories, new CategoriesAdapter.OnItemClickListener(){
-
-            @Override
-            public void onItemClick(Category category) {
-                String categorySelected = category.getName();
-                Log.e("DEBUG", categorySelected);
-//                Toast.makeText(MainActivity.this, categorySelected, Toast.LENGTH_SHORT);
-                Intent intent = new Intent(MainActivity.this, ApplicationsActivity.class);
-                intent.putExtra(CATEGORY_KEY, categorySelected);
-                Log.e("DEBUG","1");
-                intent.putExtra(LIST_KEY, (Serializable) apps);
-                Log.e("DEBUG","2");
-                startActivity(intent);
-            }
-        });
-        recyclerView.setAdapter(adapter);
+        applications = new ArrayList<>();
 
         updateInfo();
+
+        // Create fragments
+        categoriesFragment = new CategoriesFragment();
+        categoriesFragment.setCategories(categories);
+
+        // Set fragments
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
+        fragmentTransaction.commit();
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_categories);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -94,6 +76,12 @@ public class MainActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar bar = getSupportActionBar();
         bar.setTitle("Categories");
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // TODO manage back button
     }
 
     public void updateInfo(){
@@ -127,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         app = Application.parseFromJSON(json);
                         app.setCategory(Category.parseFromJSON(json.getJSONObject(WebHelper.CATEGRY_OBJECT_KEY)));
                         app.setDeveloper(Developer.parseFromJSON(json.getJSONObject(WebHelper.DEVELOPER_OBJECT_KEY)));
-                        apps.add(app);
+                        applications.add(app);
                     }
                     catch (JSONException ex){
                         ex.printStackTrace();
@@ -135,28 +123,37 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 // Set an array of categories
-                // First clear already existing
-                categories.clear();
-                Category all = new Category();
-                all.setName("All");
-                categories.add(all);
-                // Add new categories to array
-                ArrayList<String> temp = new ArrayList<>();
-                for(Application a : apps){
-                    if(!temp.contains(a.getCategory().getName())){
-                        categories.add(a.getCategory());
-                        temp.add(a.getCategory().getName());
-                    }
-
-                }
+                updateCategoriesList();
 
                 Log.d("NOTIFY", "Data updated");
                 // Notify new data
-                adapter.notifyDataSetChanged();
+                notifyDataChanged();
                 // Stop refreshing
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    private void updateCategoriesList(){
+        // First clear already existing
+        categories.clear();
+        // Create All category
+        Category all = new Category();
+        all.setName("All");
+        categories.add(all);
+        // Add new categories to array
+        ArrayList<String> temp = new ArrayList<>();
+        for(Application a : applications){
+            if(!temp.contains(a.getCategory().getName())){
+                categories.add(a.getCategory());
+                temp.add(a.getCategory().getName());
+            }
+
+        }
+    }
+
+    private void notifyDataChanged(){
+        categoriesFragment.notifyData();
     }
 
 }
