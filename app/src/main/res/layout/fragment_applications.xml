@@ -1,12 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/categories_fragment"
+    android:id="@+id/applications_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cristianr.tiendaapps.fragments.CategoriesFragment">
+    tools:context="com.example.cristianr.tiendaapps.fragments.ApplicationsFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/categories_list"
+        android:id="@+id/applications_list"
         android:layout_height="match_parent"
         android:layout_width="match_parent"/>
 

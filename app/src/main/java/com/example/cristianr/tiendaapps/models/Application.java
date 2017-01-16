@@ -50,6 +50,10 @@ public class Application extends Entity {
         return app;
     }
 
+    public String getCategoryName(){
+        return (category == null) ? "" : category.getName();
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }

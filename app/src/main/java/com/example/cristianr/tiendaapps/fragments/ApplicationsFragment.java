@@ -10,22 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.cristianr.tiendaapps.MainActivity;
 import com.example.cristianr.tiendaapps.R;
-import com.example.cristianr.tiendaapps.adapters.CategoriesAdapter;
-import com.example.cristianr.tiendaapps.models.Category;
+import com.example.cristianr.tiendaapps.adapters.ApplicationsAdapter;
+import com.example.cristianr.tiendaapps.models.Application;
 
 import java.util.List;
 
-public class CategoriesFragment extends Fragment {
+public class ApplicationsFragment extends Fragment {
 
-    private List<Category> categories;
+    private List<Application> applications;
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private CategoriesAdapter adapter;
+    private ApplicationsAdapter adapter;
 
-    public CategoriesFragment() {
+
+    public ApplicationsFragment() {
 
     }
 
@@ -33,19 +33,19 @@ public class CategoriesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_categories, container, false);
+        View view = inflater.inflate(R.layout.fragment_applications, container, false);
 
         // Get elements
-        recyclerView = (RecyclerView) view.findViewById(R.id.categories_list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.applications_list);
         recyclerView.setHasFixedSize(false);
         // Use linear layout manager
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         // Set adapter with listener
-        adapter = new CategoriesAdapter(categories, new CategoriesAdapter.OnItemClickListener() {
+        adapter = new ApplicationsAdapter(getContext(), applications, new ApplicationsAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Category category) {
-                ((MainActivity) getActivity()).selectCategory(category.getName());
+            public void onItemClick(Application application) {
+                Toast.makeText(getActivity(), application.getName(), Toast.LENGTH_SHORT).show();
             }
         });
         recyclerView.setAdapter(adapter);
@@ -58,11 +58,11 @@ public class CategoriesFragment extends Fragment {
             adapter.notifyDataSetChanged();
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public List<Application> getApplications() {
+        return applications;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setApplications(List<Application> applications) {
+        this.applications = applications;
     }
 }

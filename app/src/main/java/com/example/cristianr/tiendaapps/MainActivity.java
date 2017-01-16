@@ -1,5 +1,6 @@
 package com.example.cristianr.tiendaapps;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.cristianr.tiendaapps.fragments.ApplicationsFragment;
 import com.example.cristianr.tiendaapps.fragments.CategoriesFragment;
 import com.example.cristianr.tiendaapps.helpers.WebHelper;
 import com.example.cristianr.tiendaapps.models.Application;
@@ -26,32 +28,46 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     private List<Application> applications;
+    private List<Application> categoryApplications;
     private List<Category> categories;
+    private String category;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
     // Fragment
     private CategoriesFragment categoriesFragment;
+    private ApplicationsFragment applicationsFragment;
+
 
     private static AsyncHttpClient client;
     public boolean isTablet;
+    public boolean isSelected;
+
+    public static final String ALL_CATEGORY = "All";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // First know the kind of device
         isTablet = getResources().getBoolean(R.bool.isTablet);
+        isSelected = false;
+        // Set initial category
+        category = ALL_CATEGORY;
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         categories = new ArrayList<>();
         applications = new ArrayList<>();
+        categoryApplications = new ArrayList<>();
 
         updateInfo();
 
         // Create fragments
         categoriesFragment = new CategoriesFragment();
         categoriesFragment.setCategories(categories);
+
+        applicationsFragment = new ApplicationsFragment();
+        applicationsFragment.setApplications(categoryApplications);
 
         // Set fragments
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -74,14 +90,21 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
-        bar.setTitle("Categories");
+//        bar.setTitle("Categories");
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        // TODO manage back button
+        if(!isTablet && isSelected){
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
+            fragmentTransaction.commit();
+            isSelected = false;
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 
     public void updateInfo(){
@@ -109,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 Application app;
+                applications.clear();
                 for(int i=0; i<jsonApps.length(); i++){
                     try{
                         JSONObject json = jsonApps.getJSONObject(i);
@@ -124,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 // Set an array of categories
                 updateCategoriesList();
+                // Update applications
+                selectApplications();
 
                 Log.d("NOTIFY", "Data updated");
                 // Notify new data
@@ -139,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         categories.clear();
         // Create All category
         Category all = new Category();
-        all.setName("All");
+        all.setName(ALL_CATEGORY);
         categories.add(all);
         // Add new categories to array
         ArrayList<String> temp = new ArrayList<>();
@@ -154,6 +180,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void notifyDataChanged(){
         categoriesFragment.notifyData();
+        applicationsFragment.notifyData();
+    }
+
+    public void selectApplications(){
+        categoryApplications.clear();
+        for(Application app : applications){
+            if(category == ALL_CATEGORY || app.getCategoryName().equals(category)){
+                categoryApplications.add(app);
+            }
+        }
+    }
+
+    public void selectCategory(String categoryName){
+        isSelected = true;
+        category = categoryName;
+        selectApplications();
+
+        // Replace fragment
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment_container, applicationsFragment);
+        fragmentTransaction.commit();
+
+        notifyDataChanged();
     }
 
 }
