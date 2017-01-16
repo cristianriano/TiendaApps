@@ -1,5 +1,6 @@
 package com.example.cristianr.tiendaapps;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,13 +39,16 @@ public class MainActivity extends AppCompatActivity {
 
     private static AsyncHttpClient client;
 
+    public static final String CATEGORY_KEY = "category";
+    public static final String LIST_KEY = "list";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         categories = new ArrayList<>();
-        apps = new ArrayList<>();
+        apps = new ArrayList<Application>();
 
         recyclerView = (RecyclerView) findViewById(R.id.categories_list);
         // Improve performance if changes in content don't change layout size
@@ -51,12 +56,20 @@ public class MainActivity extends AppCompatActivity {
         // Use linear layout manager
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        // Set adapter
+        // Set adapter with listener
         adapter = new CategoriesAdapter(categories, new CategoriesAdapter.OnItemClickListener(){
 
             @Override
             public void onItemClick(Category category) {
-                Toast.makeText(MainActivity.this, category.getName(), Toast.LENGTH_SHORT).show();
+                String categorySelected = category.getName();
+                Log.e("DEBUG", categorySelected);
+//                Toast.makeText(MainActivity.this, categorySelected, Toast.LENGTH_SHORT);
+                Intent intent = new Intent(MainActivity.this, ApplicationsActivity.class);
+                intent.putExtra(CATEGORY_KEY, categorySelected);
+                Log.e("DEBUG","1");
+                intent.putExtra(LIST_KEY, (Serializable) apps);
+                Log.e("DEBUG","2");
+                startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);

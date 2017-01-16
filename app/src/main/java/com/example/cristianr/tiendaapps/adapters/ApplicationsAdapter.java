@@ -42,21 +42,13 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
     public void onBindViewHolder(ApplicationsAdapter.AppViewHolder holder, int position) {
         Application application = applications.get(position);
 
-        // Set listener
-
         // Load Image
         Picasso.with(context).load(application.getImageUrl())
                 .error(R.drawable.circle_grey)
                 .placeholder(R.drawable.circle_grey)
                 .into(holder.imageView);
 
-        holder.appNameTextView.setText(application.getName());
-        holder.appCategoryTextView.setText(application.getCategory().getName());
-        String devlopedBy = String.format("By: %s", application.getDeveloper().getName());
-        holder.appNameTextView.setText(devlopedBy);
-        // Slice summary to display first 100 characters
-        String summary = application.getSummary().substring(0,50);
-        holder.appSummaryTextView.setText(summary);
+        holder.bind(application, listener);
     }
 
     @Override
@@ -80,9 +72,28 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
             appDeveloperTextView = (TextView) v.findViewById(R.id.application_developer);
             appSummaryTextView = (TextView) v.findViewById(R.id.application_summary);
         }
+
+        public void bind(final Application application, final OnItemClickListener listener) {
+            appNameTextView.setText(application.getName());
+            appCategoryTextView.setText(application.getCategory().getName());
+            String devlopedBy = String.format("By: %s", application.getDeveloper().getName());
+            appNameTextView.setText(devlopedBy);
+            // Slice summary to display first 100 characters
+            String summary = application.getSummary().substring(0,50);
+            appSummaryTextView.setText(summary);
+
+            // Set listener
+            itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    listener.onItemClick(application);
+                }
+            });
+        }
     }
 
     public interface OnItemClickListener{
-        void onItemClick(AppViewHolder holder);
+        void onItemClick(Application application);
     }
 }

@@ -26,6 +26,32 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         this.listener = listener;
     }
 
+    // Create new views (invoked by the layout manager)
+    @Override
+    public CategoriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        // Create a new view
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_template, null);
+        ViewHolder viewHolder = new ViewHolder(v);
+
+        return viewHolder;
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // Get selected position
+        Category category = categories.get(position);
+
+        // Set listener and view
+        holder.bind(category, listener);
+    }
+
+    // Get size
+    @Override
+    public int getItemCount() {
+        return (null != categories ? categories.size() : 0);
+    }
+
     // Provide a reference to the views for each data item
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -38,6 +64,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
             this.categoryUrlTextView = (TextView) v.findViewById(R.id.category_url);
         }
 
+        // This method
         public void bind(final Category category, final OnItemClickListener listener) {
             categoryNameTextView.setText(category.getName());
             if(category.getUrl() != null){
@@ -58,35 +85,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         }
     }
 
-    // Create new views (invoked by the layout manager)
-    @Override
-    public CategoriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        // Create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_template, null);
-        ViewHolder viewHolder = new ViewHolder(v);
-
-        return viewHolder;
-    }
-
-    // Replace the contents of a view (invoked by the layout manager)
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        // Get selected position
-        Category category = categories.get(position);
-
-        // Set listener
-        holder.bind(category, listener);
-    }
-
-    // Get size
-    @Override
-    public int getItemCount() {
-        return (null != categories ? categories.size() : 0);
-    }
-
+    // Define an interface for the Click Listener
     public interface OnItemClickListener{
         void onItemClick(Category category);
     }
-
 
 }
