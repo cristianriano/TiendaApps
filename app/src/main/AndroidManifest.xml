@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ApplicationDetailActivity"
-            android:theme="@style/DetailTheme"></activity>
+            android:theme="@style/DetailTheme"
+            android:parentActivityName="com.example.cristianr.tiendaapps.MainActivity"></activity>
     </application>
 
 </manifest>
