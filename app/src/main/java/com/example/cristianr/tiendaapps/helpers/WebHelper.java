@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 import com.example.cristianr.tiendaapps.models.Application;
 import com.example.cristianr.tiendaapps.models.Category;
-import com.example.cristianr.tiendaapps.models.Developer;
 
 /**
  * Created by cristianr on 13/01/2017.
@@ -65,7 +64,7 @@ public class WebHelper {
                         JSONObject json = jsonApps.getJSONObject(i);
                         app = Application.parseFromJSON(json);
                         app.setCategory(Category.parseFromJSON(json.getJSONObject(CATEGRY_OBJECT_KEY)));
-                        app.setDeveloper(Developer.parseFromJSON(json.getJSONObject(DEVELOPER_OBJECT_KEY)));
+//                        app.setDeveloper(Developer.parseFromJSON(json.getJSONObject(DEVELOPER_OBJECT_KEY)));
                         applications.add(app);
                     }
                     catch (JSONException ex){

@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/card_summary_size"
                 android:textColor="@color/primary_text"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/card_element_top_margin"
                 android:text="Summary"
                 />
 

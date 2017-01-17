@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/primary_text"
-            android:textSize="@dimen/item_title"
+            android:textSize="@dimen/card_name_size"
             android:layout_marginBottom="@dimen/item_title_margin_bottom"
             android:text=""
             />
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/secondary_text"
-            android:textSize="@dimen/item_url"
+            android:textSize="@dimen/card_summary_size"
             android:text=""
 
             />

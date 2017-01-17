@@ -68,7 +68,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         public void bind(final Category category, final OnItemClickListener listener) {
             categoryNameTextView.setText(category.getName());
             if(category.getUrl() != null){
-                String htmlLink = String.format("<a href='%s'>Link</a>", category.getUrl());
+                String htmlLink = String.format("More info <a href='%s'>here</a>", category.getUrl());
                 categoryUrlTextView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
                 categoryUrlTextView.setText(Html.fromHtml(htmlLink));
             }

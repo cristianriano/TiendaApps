@@ -22,5 +22,9 @@
     <dimen name="card_name_size">20sp</dimen>
     <dimen name="card_category_size">16sp</dimen>
     <dimen name="card_summary_size">12sp</dimen>
+    <dimen name="card_element_top_margin">10dp</dimen>
+    <dimen name="card_body_top_margin">20dp</dimen>
 
+    <!-- Application Detail Card -->
+    <dimen name="card_detail_padding">10dp</dimen>
 </resources>

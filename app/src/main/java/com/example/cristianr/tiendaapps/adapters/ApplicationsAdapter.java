@@ -76,7 +76,7 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
         public void bind(final Application application, final OnItemClickListener listener) {
             appNameTextView.setText(application.getName());
             appCategoryTextView.setText(application.getCategoryName());
-            String devlopedBy = String.format("By: %s", application.getDeveloper().getName());
+            String devlopedBy = String.format("By: %s", application.getDeveloperName());
             appDeveloperTextView.setText(devlopedBy);
             // Slice summary to display first 100 characters
             String summary = application.getSummary().substring(0,100);

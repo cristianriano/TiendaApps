@@ -1,6 +1,7 @@
 package com.example.cristianr.tiendaapps.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.cristianr.tiendaapps.ApplicationDetailActivity;
+import com.example.cristianr.tiendaapps.MainActivity;
 import com.example.cristianr.tiendaapps.R;
 import com.example.cristianr.tiendaapps.adapters.ApplicationsAdapter;
 import com.example.cristianr.tiendaapps.models.Application;
@@ -45,7 +48,9 @@ public class ApplicationsFragment extends Fragment {
         adapter = new ApplicationsAdapter(getContext(), applications, new ApplicationsAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Application application) {
-                Toast.makeText(getActivity(), application.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), ApplicationDetailActivity.class);
+                intent.putExtra(MainActivity.APPLICATION_KEY, application);
+                startActivity(intent);
             }
         });
         recyclerView.setAdapter(adapter);

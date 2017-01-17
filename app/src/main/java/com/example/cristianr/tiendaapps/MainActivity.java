@@ -1,6 +1,5 @@
 package com.example.cristianr.tiendaapps;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,6 @@ import com.example.cristianr.tiendaapps.fragments.CategoriesFragment;
 import com.example.cristianr.tiendaapps.helpers.WebHelper;
 import com.example.cristianr.tiendaapps.models.Application;
 import com.example.cristianr.tiendaapps.models.Category;
-import com.example.cristianr.tiendaapps.models.Developer;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -44,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean isSelected;
 
     public static final String ALL_CATEGORY = "All";
+    public static final String APPLICATION_KEY = "application";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         android.support.v7.app.ActionBar bar = getSupportActionBar();
-//        bar.setTitle("Categories");
+        if(!isTablet)
+            bar.setTitle("Categories");
         return true;
     }
 
@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
             fragmentTransaction.commit();
             isSelected = false;
+            // Update title
+            getSupportActionBar().setTitle("Categories");
         }
         else{
             super.onBackPressed();
@@ -138,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject json = jsonApps.getJSONObject(i);
                         app = Application.parseFromJSON(json);
                         app.setCategory(Category.parseFromJSON(json.getJSONObject(WebHelper.CATEGRY_OBJECT_KEY)));
-                        app.setDeveloper(Developer.parseFromJSON(json.getJSONObject(WebHelper.DEVELOPER_OBJECT_KEY)));
                         applications.add(app);
                     }
                     catch (JSONException ex){
@@ -201,6 +202,10 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.main_fragment_container, applicationsFragment);
         fragmentTransaction.commit();
+
+        // Update Title
+        if(!isTablet)
+            getSupportActionBar().setTitle(category);
 
         notifyDataChanged();
     }
