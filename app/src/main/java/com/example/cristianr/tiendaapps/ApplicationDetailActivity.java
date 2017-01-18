@@ -95,6 +95,10 @@ public class ApplicationDetailActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 image.setImageBitmap(bitmap);
             }
+            // Set a grey square in case neither file exists
+            else{
+                image.setImageResource(R.drawable.square_grey);
+            }
         }
 
         setApplicationValues();
