@@ -14,7 +14,7 @@ import java.net.URL;
 public class Category extends Entity implements Serializable{
 
     private String name, id;
-    private URL url;
+    private String url;
 
     public static final String URL_KEY = "scheme";
 
@@ -31,21 +31,11 @@ public class Category extends Entity implements Serializable{
         return category;
     }
 
-    public void setUrl(String s){
-        try{
-            this.url = new URL(s);
-        }
-        catch (MalformedURLException ex){
-            ex.printStackTrace();
-            this.url = null;
-        }
-    }
-
-    public URL getUrl() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(URL url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 

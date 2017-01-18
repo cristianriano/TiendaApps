@@ -29,11 +29,11 @@ public class Application extends Entity implements Serializable{
     public static final String ID_OBJECT_KEY = "id";
 
     private String summary, currency, developerName, name, id;
-    private URL url;
+    private String url;
     private double price;
     private String bigImageUrl, imageUrl;
-    private Date relaseDate;
-    private final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+//    private Date relaseDate;
+//    private final SimpleDateFormat dateFormater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     private Category category;
 
     public Application(){
@@ -50,30 +50,19 @@ public class Application extends Entity implements Serializable{
         JSONObject jsonPrice= json.getJSONObject(PRICE_OBJECT_KEY).getJSONObject(ATTRIBUTES_KEY);
         app.setCurrency(jsonPrice.getString(CURRENCY_KEY));
         app.setPrice(jsonPrice.getDouble(AMOUNT_KEY));
-        app.setRelaseDate(json.getJSONObject(RELASE_DATE_OBJECT_KEY).getString(NAME_KEY));
+//        app.setRelaseDate(json.getJSONObject(RELASE_DATE_OBJECT_KEY).getString(NAME_KEY));
         app.setUrl(json.getJSONObject(LINK_OBJECT_KEY).getJSONObject(ATTRIBUTES_KEY).getString(URL_KEY));
         app.setId(json.getJSONObject(ID_OBJECT_KEY).getJSONObject(ATTRIBUTES_KEY).getString(ID_KEY));
         app.setDeveloperName(json.getJSONObject(WebHelper.DEVELOPER_OBJECT_KEY).getString(NAME_KEY));
         return app;
     }
 
-    public void setUrl(String s){
-        try{
-            this.url = new URL(s);
-        }
-        catch (MalformedURLException ex){
-            ex.printStackTrace();
-            this.url = null;
-        }
-    }
-
-    public URL getUrl() {
-        return url;
-    }
-
-    public void setUrl(URL url) {
+    public void setUrl(String url){
         this.url = url;
     }
+
+    public String getUrl(){ return url;}
+
 
     public String getId() {
         return id;
@@ -127,23 +116,23 @@ public class Application extends Entity implements Serializable{
         this.category = category;
     }
 
-    public void setRelaseDate(Date relaseDate) {
-        this.relaseDate = relaseDate;
-    }
-
-    public void setRelaseDate(String s){
-        try{
-            this.relaseDate = dateFormater.parse(s);
-        }
-        catch (java.text.ParseException ex){
-            ex.printStackTrace();
-            this.relaseDate = null;
-        }
-    }
-
-    public Date getRelaseDate(){
-        return relaseDate;
-    }
+//    public void setRelaseDate(Date relaseDate) {
+//        this.relaseDate = relaseDate;
+//    }
+//
+//    public void setRelaseDate(String s){
+//        try{
+//            this.relaseDate = dateFormater.parse(s);
+//        }
+//        catch (java.text.ParseException ex){
+//            ex.printStackTrace();
+//            this.relaseDate = null;
+//        }
+//    }
+//
+//    public Date getRelaseDate(){
+//        return relaseDate;
+//    }
 
     public String getSummary() {
         return summary;

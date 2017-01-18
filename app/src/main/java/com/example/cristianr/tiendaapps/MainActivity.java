@@ -1,5 +1,7 @@
 package com.example.cristianr.tiendaapps;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +19,8 @@ import com.example.cristianr.tiendaapps.fragments.CategoriesFragment;
 import com.example.cristianr.tiendaapps.helpers.WebHelper;
 import com.example.cristianr.tiendaapps.models.Application;
 import com.example.cristianr.tiendaapps.models.Category;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -41,8 +46,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean isTablet;
     public boolean isSelected;
 
+    // Shared Preferences and GSON serializer
+    private Gson gson;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
+
     public static final String ALL_CATEGORY = "All";
     public static final String APPLICATION_KEY = "application";
+    public static final String APPLICATIONS_LIST_KEY = "applications";
+    public static final String CATEGORIES_LIST_KEY = "categories";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_categories);
+
+        gson = new Gson();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
 
         categories = new ArrayList<>();
         applications = new ArrayList<>();
@@ -73,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
         fragmentTransaction.commit();
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_categories);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -115,8 +133,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             Toast.makeText(this, "You don't have internet access", Toast.LENGTH_LONG).show();
-            // TODO Implement cache recovering
+            readLists();
         }
+        // Stop refreshing
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public void updateApplications(){
@@ -150,17 +170,18 @@ public class MainActivity extends AppCompatActivity {
                 // Set an array of categories
                 updateCategoriesList();
                 // Update applications
-                selectApplications();
+                updateCategoryApplications();
+                // Save lists
+                saveLists();
 
                 Log.d("NOTIFY", "Data updated");
                 // Notify new data
                 notifyDataChanged();
-                // Stop refreshing
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
+    // Update the List of unique Categories
     private void updateCategoriesList(){
         // First clear already existing
         categories.clear();
@@ -179,12 +200,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Notify both adapters Applications and Categories
     private void notifyDataChanged(){
         categoriesFragment.notifyData();
         applicationsFragment.notifyData();
     }
 
-    public void selectApplications(){
+    // Update List of Applications by Global Category
+    public void updateCategoryApplications(){
         categoryApplications.clear();
         for(Application app : applications){
             if(category == ALL_CATEGORY || app.getCategoryName().equals(category)){
@@ -193,10 +216,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Pick category, update List and fragment
     public void selectCategory(String categoryName){
         isSelected = true;
         category = categoryName;
-        selectApplications();
+        updateCategoryApplications();
 
         // Replace fragment
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -208,6 +232,29 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(category);
 
         notifyDataChanged();
+    }
+
+    // Save applications and categories list in SharedPreferences
+    private void saveLists(){
+        // Stringify to JSON applications array and categories array with GSON
+        String jsonApplications = gson.toJson(applications);
+        String jsonCategories = gson.toJson(categories);
+
+        // Save preferences
+        editor.putString(APPLICATIONS_LIST_KEY, jsonApplications);
+        editor.putString(CATEGORIES_LIST_KEY, jsonCategories);
+        editor.commit();
+    }
+
+    private void readLists(){
+        Type applicationsListType = new TypeToken<List<Application>>(){}.getType();
+        Type categoriesListType = new TypeToken<List<Category>>(){}.getType();
+
+        // Read from preferences
+        String jsonApplications = sharedPreferences.getString(APPLICATIONS_LIST_KEY, null);
+        String jsonCategories = sharedPreferences.getString(CATEGORIES_LIST_KEY, null);
+        applications = gson.fromJson(jsonApplications, applicationsListType);
+        categories = gson.fromJson(jsonCategories, categoriesListType);
     }
 
 }
