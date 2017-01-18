@@ -1,6 +1,9 @@
 package com.example.cristianr.tiendaapps.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -10,9 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cristianr.tiendaapps.R;
+import com.example.cristianr.tiendaapps.helpers.CacheHelper;
+import com.example.cristianr.tiendaapps.helpers.WebHelper;
 import com.example.cristianr.tiendaapps.models.Application;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -39,14 +46,36 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
     }
 
     @Override
-    public void onBindViewHolder(ApplicationsAdapter.AppViewHolder holder, int position) {
-        Application application = applications.get(position);
+    public void onBindViewHolder(final ApplicationsAdapter.AppViewHolder holder, int position) {
+        final Application application = applications.get(position);
 
-        // Load Image
-        Picasso.with(context).load(application.getImageUrl())
-                .error(R.drawable.circle_grey)
-                .placeholder(R.drawable.circle_grey)
-                .into(holder.imageView);
+        // If have Internet download image and save it to cache
+        if(WebHelper.checkInternet(context)){
+            // Load Image
+            Picasso.with(context).load(application.getImageUrl())
+                    .error(R.drawable.circle_grey)
+                    .placeholder(R.drawable.circle_grey)
+                    .into(holder.imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Bitmap bitmap = ((BitmapDrawable) holder.imageView.getDrawable()).getBitmap();
+                            CacheHelper.saveImage(bitmap, application.getImageUrl());
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+        }
+        else {
+            File file = CacheHelper.getFile(application.getImageUrl());
+            if(file != null){
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                holder.imageView.setImageBitmap(bitmap);
+            }
+        }
+
 
         holder.bind(application, listener);
     }

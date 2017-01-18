@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateCategoryApplications(){
         categoryApplications.clear();
         for(Application app : applications){
-            if(category == ALL_CATEGORY || app.getCategoryName().equals(category)){
+            if(category.equals(ALL_CATEGORY) || app.getCategoryName().equals(category)){
                 categoryApplications.add(app);
             }
         }
