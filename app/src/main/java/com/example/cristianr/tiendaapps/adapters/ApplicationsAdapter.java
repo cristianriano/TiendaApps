@@ -49,8 +49,8 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
     public void onBindViewHolder(final ApplicationsAdapter.AppViewHolder holder, int position) {
         final Application application = applications.get(position);
 
-        // If have Internet download image and save it to cache
-        if(WebHelper.checkInternet(context)){
+        // If the file doesn't exists locally (downloaded previously) then use Picasso
+        if(!CacheHelper.checkIfFileExists(application.getImageUrl()) && WebHelper.checkInternet(context)){
             // Load Image
             Picasso.with(context).load(application.getImageUrl())
                     .error(R.drawable.circle_grey)
@@ -68,14 +68,14 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
                         }
                     });
         }
-        else {
+        // If file exists or there is no Internet connection, then read it from cache
+        else{
             File file = CacheHelper.getFile(application.getImageUrl());
             if(file != null){
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 holder.imageView.setImageBitmap(bitmap);
             }
         }
-
 
         holder.bind(application, listener);
     }

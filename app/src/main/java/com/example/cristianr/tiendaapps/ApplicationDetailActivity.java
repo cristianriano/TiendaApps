@@ -2,6 +2,7 @@ package com.example.cristianr.tiendaapps;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +13,14 @@ import android.text.Html;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.example.cristianr.tiendaapps.helpers.CacheHelper;
+import com.example.cristianr.tiendaapps.helpers.WebHelper;
 import com.example.cristianr.tiendaapps.models.Application;
 import com.example.cristianr.tiendaapps.widgets.SquareImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class ApplicationDetailActivity extends AppCompatActivity {
 
@@ -56,29 +61,41 @@ public class ApplicationDetailActivity extends AppCompatActivity {
         collapsingToolbarLayout.setTitle(application.getName());
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
+        // If file doesn't exists locally (downloaded previously) then use Picasso
+        if(!CacheHelper.checkIfFileExists(application.getBigImageUrl()) && WebHelper.checkInternet(this)){
+            Picasso.with(this).load(application.getBigImageUrl())
+                    .error(R.drawable.square_grey)
+                    .placeholder(R.drawable.square_grey)
+                    .into(image, new Callback() {
+                        // When image is load execute a callback to get colors palette
+                        @Override
+                        public void onSuccess() {
+                            Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+                            CacheHelper.saveImage(bitmap, application.getBigImageUrl());
+                            Palette .from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                                @Override
+                                public void onGenerated(Palette palette) {
+                                    applyPalette(palette);
+                                }
+                            });
+                        }
 
-        // Temporally load image with Internet
-        Picasso.with(this).load(application.getBigImageUrl())
-                .error(R.drawable.square_grey)
-                .placeholder(R.drawable.square_grey)
-                .into(image, new Callback() {
-                    // When image is load execute a callback to get colors palette
-                    @Override
-                    public void onSuccess() {
-                        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
-                        Palette .from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                            @Override
-                            public void onGenerated(Palette palette) {
-                                applyPalette(palette);
-                            }
-                        });
-                    }
+                        @Override
+                        public void onError() {
 
-                    @Override
-                    public void onError() {
-
-                    }
-                });
+                        }
+                    });
+        }
+        // If file exists or there is no Internet connection, then read it from cache
+        else{
+            // If the big image wasn't downloaded yet, try with the small one
+            String imageUrl = (CacheHelper.checkIfFileExists(application.getBigImageUrl())) ? application.getBigImageUrl() : application.getImageUrl();
+            File file = CacheHelper.getFile(imageUrl);
+            if(file != null){
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                image.setImageBitmap(bitmap);
+            }
+        }
 
         setApplicationValues();
     }

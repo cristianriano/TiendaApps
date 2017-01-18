@@ -51,4 +51,10 @@ public class CacheHelper {
         return file;
     }
 
+    public static boolean checkIfFileExists(String filename){
+        File cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), DIR_NAME);
+        File file = new File(cacheDir.getAbsolutePath(), String.valueOf(filename.hashCode()));
+        return file.exists();
+    }
+
 }
