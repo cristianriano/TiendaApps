@@ -15,16 +15,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashActivity"
+            android:theme="@style/DetailTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ApplicationDetailActivity"
-            android:theme="@style/DetailTheme"
-            android:parentActivityName="com.example.cristianr.tiendaapps.MainActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".ApplicationDetailActivity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/DetailTheme" />
     </application>
 
 </manifest>
