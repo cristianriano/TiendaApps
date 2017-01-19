@@ -5,13 +5,16 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cristianr.tiendaapps.helpers.CacheHelper;
@@ -27,7 +30,7 @@ public class ApplicationDetailActivity extends AppCompatActivity {
 
     private Application application;
 
-    private SquareImageView image;
+    private ImageView image;
     private TextView nameTextView;
     private TextView developerTextView;
     private TextView priceTextView;
@@ -42,16 +45,22 @@ public class ApplicationDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_application_detail);
 
         isTablet = getResources().getBoolean(R.bool.isTablet);
-        // If tablet use Landscape
-        if(isTablet)
+        // If tablet use Landscape and use theme with Bar
+        if(isTablet){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        else
+            setTheme(R.style.AppTheme);
+        }
+        else{
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
-        image = (SquareImageView) findViewById(R.id.application_detail_image);
+        // Set Normal theme when tablet
+
+        setContentView(R.layout.activity_application_detail);
+
+        image = (ImageView) findViewById(R.id.application_detail_image);
         nameTextView = (TextView) findViewById(R.id.application_detail_name);
         developerTextView = (TextView) findViewById(R.id.application_detail_developer);
         priceTextView = (TextView) findViewById(R.id.application_detail_price);
@@ -63,12 +72,19 @@ public class ApplicationDetailActivity extends AppCompatActivity {
         application = (Application) intent.getSerializableExtra(MainActivity.APPLICATION_KEY);
 
         // Toolbar settings
-        setSupportActionBar((Toolbar) findViewById(R.id.application_detail_toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(!isTablet){
+            setSupportActionBar((Toolbar) findViewById(R.id.application_detail_toolbar));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.application_detail_collapsing_bar);
-        collapsingToolbarLayout.setTitle(application.getName());
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+            collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.application_detail_collapsing_bar);
+            collapsingToolbarLayout.setTitle(application.getName());
+            collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        }
+        else{
+            ActionBar bar = getSupportActionBar();
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setTitle(application.getName());
+        }
 
         // If file doesn't exists locally (downloaded previously) then use Picasso
         if(!CacheHelper.checkIfFileExists(application.getBigImageUrl()) && WebHelper.checkInternet(this)){
@@ -81,7 +97,7 @@ public class ApplicationDetailActivity extends AppCompatActivity {
                         public void onSuccess() {
                             Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
                             CacheHelper.saveImage(bitmap, application.getBigImageUrl());
-                            Palette .from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                                 @Override
                                 public void onGenerated(Palette palette) {
                                     applyPalette(palette);
@@ -103,6 +119,13 @@ public class ApplicationDetailActivity extends AppCompatActivity {
             if(file != null){
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 image.setImageBitmap(bitmap);
+                // Also apply palette when loading
+                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        applyPalette(palette);
+                    }
+                });
             }
             // Set a grey square in case neither file exists
             else{
@@ -116,8 +139,13 @@ public class ApplicationDetailActivity extends AppCompatActivity {
     private void applyPalette(Palette palette){
         int primaryDark = getResources().getColor(R.color.primary_dark);
         int primary = getResources().getColor(R.color.primary);
-        collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
-        collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+        if(!isTablet){
+            collapsingToolbarLayout.setContentScrimColor(palette.getMutedColor(primary));
+            collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkMutedColor(primaryDark));
+        }
+        else {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(palette.getMutedColor(primary)));
+        }
         supportPostponeEnterTransition();
     }
 
