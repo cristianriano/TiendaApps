@@ -1,6 +1,7 @@
 package com.example.cristianr.tiendaapps;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,11 +37,19 @@ public class ApplicationDetailActivity extends AppCompatActivity {
     private CollapsingToolbarLayout collapsingToolbarLayout;
 
     public static final String FREE_LABEL = "FREE";
+    public boolean isTablet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_application_detail);
+
+        isTablet = getResources().getBoolean(R.bool.isTablet);
+        // If tablet use Landscape
+        if(isTablet)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        else
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         image = (SquareImageView) findViewById(R.id.application_detail_image);
         nameTextView = (TextView) findViewById(R.id.application_detail_name);

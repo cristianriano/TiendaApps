@@ -30,7 +30,9 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
     @Override
     public CategoriesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         // Create a new view
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_template, null);
+        // The inflate method gets the parent as a second argument to let the inflater know what layoutparams to use.
+        // The false tells not to attach it to the parent yet (Recycler View will do that for you)
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_template, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
 
         return viewHolder;

@@ -4,6 +4,7 @@ package com.example.cristianr.tiendaapps.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -41,8 +42,14 @@ public class ApplicationsFragment extends Fragment {
         // Get elements
         recyclerView = (RecyclerView) view.findViewById(R.id.applications_list);
         recyclerView.setHasFixedSize(false);
-        // Use linear layout manager
-        layoutManager = new LinearLayoutManager(getActivity());
+        // Use GridLayoutManager if tablet
+        if(((MainActivity) getActivity()).isTablet){
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+        }
+        // If not use LinearLayour
+        else {
+            layoutManager = new LinearLayoutManager(getActivity());
+        }
         recyclerView.setLayoutManager(layoutManager);
         // Set adapter with listener
         adapter = new ApplicationsAdapter(getContext(), applications, new ApplicationsAdapter.OnItemClickListener() {

@@ -1,6 +1,7 @@
 package com.example.cristianr.tiendaapps;
 
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -61,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         // First know the kind of device
         isTablet = getResources().getBoolean(R.bool.isTablet);
+        // If tablet use Landscape
+        if(isTablet)
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        else
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         isSelected = false;
         // Set initial category
         category = ALL_CATEGORY;
@@ -87,10 +94,7 @@ public class MainActivity extends AppCompatActivity {
         applicationsFragment = new ApplicationsFragment();
         applicationsFragment.setApplications(categoryApplications);
 
-        // Set fragments
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
-        fragmentTransaction.commit();
+        initFragments();
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -125,6 +129,17 @@ public class MainActivity extends AppCompatActivity {
         else{
             super.onBackPressed();
         }
+    }
+
+    private void initFragments(){
+        // Set main_fragment <-> CategoriesFragment
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
+        // If is a tablet load the ApplicationFragment in the secondary_fragment_container
+        if(isTablet){
+            fragmentTransaction.replace(R.id.secondary_fragment_container, applicationsFragment);
+        }
+        fragmentTransaction.commit();
     }
 
     public void updateInfo(){
@@ -222,14 +237,14 @@ public class MainActivity extends AppCompatActivity {
         category = categoryName;
         updateCategoryApplications();
 
-        // Replace fragment
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.main_fragment_container, applicationsFragment);
-        fragmentTransaction.commit();
-
-        // Update Title
-        if(!isTablet)
-            getSupportActionBar().setTitle(category);
+        // Replace fragment if is not a table
+        if(!isTablet){
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.main_fragment_container, applicationsFragment);
+            fragmentTransaction.commit();
+        }
+        // Update title
+        getSupportActionBar().setTitle(category);
 
         notifyDataChanged();
     }
