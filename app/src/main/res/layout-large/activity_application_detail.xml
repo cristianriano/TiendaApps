@@ -25,67 +25,78 @@
             android:fillViewport="true"
             android:layout_weight="2">
 
-            <LinearLayout
+            <android.support.v7.widget.CardView
+                android:id="@id/application_detail_card"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/card_detail_padding">
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="@dimen/card_elevation"
+                app:cardUseCompatPadding="true"
+                android:foreground="?android:attr/selectableItemBackground">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_detail_padding">
 
-                    <TextView
-                        android:id="@+id/application_detail_name"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/card_name_size"
-                        android:textColor="@color/primary_text"
-                        android:gravity="left"
-                        android:text="NAME"
-                        android:layout_weight="2"
-                        />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/application_detail_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/card_name_size"
+                            android:textColor="@color/primary_text"
+                            android:gravity="left"
+                            android:text="NAME"
+                            android:layout_weight="2"
+                            />
+
+                        <TextView
+                            android:id="@id/application_detail_price"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:textSize="@dimen/card_name_size"
+                            android:textColor="@color/primary_text"
+                            android:gravity="right"
+                            android:text="FREE"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@id/application_detail_price"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:textSize="@dimen/card_name_size"
+                        android:id="@id/application_detail_developer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/card_summary_size"
+                        android:textColor="@color/secondary_text"
+                        android:text="By: Developer"/>
+
+                    <TextView
+                        android:id="@id/application_detail_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/card_summary_size"
                         android:textColor="@color/primary_text"
-                        android:gravity="right"
-                        android:text="FREE"
-                        android:layout_weight="1"/>
+                        android:layout_marginTop="@dimen/card_body_top_margin"
+                        android:text="Summary"/>
+
+                    <TextView
+                        android:id="@id/application_detail_url"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/card_summary_size"
+                        android:textColor="@color/secondary_text"
+                        android:layout_marginTop="@dimen/card_element_top_margin"
+                        android:text="URL"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@id/application_detail_developer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/card_summary_size"
-                    android:textColor="@color/secondary_text"
-                    android:text="By: Developer"/>
-
-                <TextView
-                    android:id="@id/application_detail_summary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/card_summary_size"
-                    android:textColor="@color/primary_text"
-                    android:layout_marginTop="@dimen/card_body_top_margin"
-                    android:text="Summary"/>
-
-                <TextView
-                    android:id="@id/application_detail_url"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/card_summary_size"
-                    android:textColor="@color/secondary_text"
-                    android:layout_marginTop="@dimen/card_element_top_margin"
-                    android:text="URL"/>
-
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
         </ScrollView>
 
