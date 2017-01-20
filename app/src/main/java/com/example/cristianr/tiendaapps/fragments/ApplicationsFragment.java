@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.cristianr.tiendaapps.ApplicationDetailActivity;
@@ -27,6 +28,11 @@ public class ApplicationsFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private ApplicationsAdapter adapter;
+
+    public static final String LEFT_KEY = "left";
+    public static final String TOP_KEY = "top";
+    public static final String WIDTH_KEY = "width";
+    public static final String HEIGHT_KEY = "heigth";
 
 
     public ApplicationsFragment() {
@@ -53,11 +59,23 @@ public class ApplicationsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         // Set adapter with listener
         adapter = new ApplicationsAdapter(getContext(), applications, new ApplicationsAdapter.OnItemClickListener() {
+            // Receive the application object and the template
             @Override
-            public void onItemClick(Application application) {
+            public void onItemClick(Application application, View v) {
+                // Get the image to make an effect
+                ImageView image = (ImageView) v.findViewById(R.id.application_image);
+                // Get location and size
+                int[] screenLocation = new int[2];
+                image.getLocationOnScreen(screenLocation);
+
                 Intent intent = new Intent(getActivity(), ApplicationDetailActivity.class);
                 intent.putExtra(MainActivity.APPLICATION_KEY, application);
+                intent.putExtra(LEFT_KEY, screenLocation[0]);
+                intent.putExtra(TOP_KEY, screenLocation[1]);
+                intent.putExtra(WIDTH_KEY, image.getWidth());
+                intent.putExtra(HEIGHT_KEY, image.getHeight());
                 startActivity(intent);
+
             }
         });
         recyclerView.setAdapter(adapter);

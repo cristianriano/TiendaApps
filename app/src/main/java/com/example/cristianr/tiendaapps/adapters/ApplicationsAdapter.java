@@ -116,13 +116,13 @@ public class ApplicationsAdapter extends RecyclerView.Adapter<ApplicationsAdapte
 
                 @Override
                 public void onClick(View view) {
-                    listener.onItemClick(application);
+                    listener.onItemClick(application, view);
                 }
             });
         }
     }
 
     public interface OnItemClickListener{
-        void onItemClick(Application application);
+        void onItemClick(Application application, View v);
     }
 }

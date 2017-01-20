@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".SplashActivity"
-            android:theme="@style/DetailTheme" >
+            android:theme="@style/SplashTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,7 +27,7 @@
         <activity
             android:name=".ApplicationDetailActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/DetailTheme" />
+            android:theme="@style/Transparent" />
     </application>
 
 </manifest>

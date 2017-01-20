@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupWindowAnimation();
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_categories);
 
@@ -270,6 +271,11 @@ public class MainActivity extends AppCompatActivity {
         String jsonCategories = sharedPreferences.getString(CATEGORIES_LIST_KEY, null);
         applications = gson.fromJson(jsonApplications, applicationsListType);
         categories = gson.fromJson(jsonCategories, categoriesListType);
+    }
+
+    // Setup Enter and Exit transitions
+    private void setupWindowAnimation(){
+        overridePendingTransition(0, 0);
     }
 
 }
