@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -14,6 +17,8 @@ public class SplashActivity extends AppCompatActivity {
 
     // Set the duration of the splash screen
     private static final long SPLASH_SCREEN_DELAY = 2000;
+
+    private ImageView imageViewLogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,20 +36,41 @@ public class SplashActivity extends AppCompatActivity {
 //        actionBar.hide();
 
         setContentView(R.layout.activity_splash);
+        imageViewLogo = (ImageView) findViewById(R.id.splash_image);
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
+        new IntentLauncher().start();
+
+    }
+
+    private class IntentLauncher extends Thread {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(SPLASH_SCREEN_DELAY/2);
+                animLogo();
+                Thread.sleep(SPLASH_SCREEN_DELAY/2);
                 // Start next activity
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
 
                 // Finish activity so the user can't go back
                 finish();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        };
+        }
+    }
 
-        Timer timer = new Timer();
-        timer.schedule(task, SPLASH_SCREEN_DELAY);
+
+    public  void animLogo() {
+        runOnUiThread(new Runnable() {      //go count - show interface
+            @Override
+            public void run() {
+                imageViewLogo.setVisibility(View.VISIBLE);
+                Animation animation = AnimationUtils.loadAnimation(SplashActivity.this, R.anim.fade_in);
+                animation.reset();
+                imageViewLogo.startAnimation(animation);
+            }
+        });
     }
 }

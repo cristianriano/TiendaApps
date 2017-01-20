@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if(!isTablet && isSelected){
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             fragmentTransaction.replace(R.id.main_fragment_container, categoriesFragment);
             fragmentTransaction.commit();
             isSelected = false;
@@ -241,6 +242,7 @@ public class MainActivity extends AppCompatActivity {
         // Replace fragment if is not a table
         if(!isTablet){
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             fragmentTransaction.replace(R.id.main_fragment_container, applicationsFragment);
             fragmentTransaction.commit();
         }

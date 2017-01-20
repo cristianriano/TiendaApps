@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/white"
     tools:context="com.example.cristianr.tiendaapps.SplashActivity">
 
     <ImageView
+        android:layout_alignParentBottom="true"
         android:id="@+id/splash_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:scaleType="fitXY"
+        android:visibility="invisible"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/splash_screen"/>
+        android:src="@drawable/android_logo"/>
 
 </RelativeLayout>
